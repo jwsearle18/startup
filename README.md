@@ -12,9 +12,9 @@ The application will include the ability for the vacation rental owner to regist
 
 #### Technology Use
     
-The app will include *authentication* because Owners will be able to register their vacation rental on the service, while tenants will be able to create an account and customize their order.  The app will include *Database data* with its storage of vacation rental addresses as well as customer orders.  The app will include *Websocket data* by updating the tenants of the delivery status.
+The app will include *Authentication* because Owners will be able to register their vacation rental on the service, while tenants will be able to create an account and customize their order.  The app will include *Database data* with its storage of vacation rental addresses as well as customer orders.  The app will include *Websocket data* by updating the tenants of the delivery status.
 
 #### Design Images
 
-![Design Image First Page](/images/AireStockSketch1.jpg)
-![Design Image Second Page](/images/AireStockSketch2.jpg)
+![Design Image First Page](/images/AireStockSketch1.png)
+![Design Image Second Page](/images/AireStockSketch2.png)
