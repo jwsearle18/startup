@@ -18,10 +18,3 @@ The app will include *Authentication* because Owners will be able to register th
 
 ![Design Image First Page](/images/AireStockSketch1.png)
 ![Design Image Second Page](/images/AireStockSketch2.png)
-
-## AWS EC2
-
-#### Elastic IP Address
-> 54.157.103.36
-#### Command to remote shell into server
-> ssh -i ~/Desktop/cs260/jadenKeyPairAirestock.pem ubuntu@54.157.103.36
