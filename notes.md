@@ -17,3 +17,10 @@ Web framework - Using React to add components and request routing
 > 54.157.103.36
 #### Command to remote shell into server
 > ssh -i ~/Desktop/cs260/jadenKeyPairAirestock.pem ubuntu@54.157.103.36
+
+> ssh -i ~/Desktop/cs260/jadenKeyPairAirestock.pem ubuntu@airestock.click
+
+## AWS Route 53
+
+#### Domain Name
+> airestock.click
