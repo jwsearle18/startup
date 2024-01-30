@@ -17,9 +17,7 @@
         <!-- Menu is a semantic alternative to <ul> that represents an interaction -->
         <menu>
           <li><a href="index.html">Home</a></li>
-          <li><a href="registerVR.html">Register your vacation rental</a></li>
-          <li><a href="signIn.html">Sign in</a></li>
-          <li><a href="signUp.html">Sign up</a></li>
+          <li><a href="renterCart.html">Cart</a></li>
         </menu>
       </nav>
 
@@ -28,18 +26,19 @@
     </header>
 
     <main>
-    <br />
-      <br />
-      <h1>Discover Snacks Available at your Vacation Rental Location!</h1>
-      <form id="addressForm" method="get" action="renterSnackOptions.html">
-        <label for="address"></label>
-        <input type="text" id="name" placeholder="Enter Vacation Rental Address" />
-        <button type="button" onclick="searchAddress()">Search</button>
-      </form>
-      <br />
-      <br />
+      <h1>Available Snacks</h1>
+      <input type="text" id="Snacks" placeholder="Search Avaiable Snacks" />
+        <button type="button" onclick="searchSnacks()">Search</button>
+      <fieldset>
+        <legend>Snacks</legend>
+        <label for="Doritos">Doritos</label>
+        <input type="checkbox" id="Snacks" name="varCheckbox" value="Doritos" checked />
+        <label for="Pretzels">Pretzels</label>
+        <input type="checkbox" id="Snacks" name="varCheckbox" value="Pretzels" />
+      </fieldset>
+      
     </main>
-
+    <br />
     <footer>
       <hr />
       <a href="vacationRentals.html">Connect with a Vacation Rental Service</a>
