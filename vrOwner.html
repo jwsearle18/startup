@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Tell browsers not to scale the viewport automatically -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Airestock HTML</title>
+    <link rel="icon" href="favicon.ico" />
+  </head>
+  <body>
+    <!-- Use header, main, and footer elements to give semantic structure -->
+    <header>
+      <h1>Airestock<sup>&reg;</sup></h1>
+      
+      <!-- Navigation elements -->
+      <nav>
+        <!-- Menu is a semantic alternative to <ul> that represents an interaction -->
+        <menu>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="registerVR.html">Register your vacation rental</a></li>
+          <li><a href="signIn.html">Sign in</a></li>
+          <li><a href="signUp.html">Sign up</a></li>
+        </menu>
+      </nav>
+
+      <!-- Since we don't have the ability to style we use old style HTML to give some visual formatting -->
+      <hr />
+    </header>
+
+    <main>
+      <h1>Discover Local Restaurants/Grocery Stores!</h1>
+      <form id="addressForm" method="get" action="localRestaurants.html">
+        <label for="address"></label>
+        <input type="text" id="name" placeholder="Enter Vacation Rental Address" />
+        <button type="button" onclick="searchAddress()">Search</button>
+      </form>
+    </main>
+
+    <footer>
+      <hr />
+      <a href="vacationRentals.html">Connect with a Vacation Rental Service</a>
+      <br />
+      <span class="text-reset">Jaden Searle</span>
+      <br />
+      <a href="https://github.com/jwsearle18/260startup">GitHub</a>
+    </footer>
+  </body>
+</html>
