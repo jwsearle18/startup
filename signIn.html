@@ -28,12 +28,21 @@
     </header>
 
     <main>
-      <h1>Discover Local Restaurants/Grocery Stores!</h1>
-      <form id="addressForm" method="get" action="localRestaurants.html">
-        <label for="address"></label>
-        <input type="text" id="name" placeholder="Enter Vacation Rental Address" />
-        <button type="button" onclick="searchAddress()">Search</button>
-      </form>
+      <h1>Sign In</h1>
+
+      <label for="email"><b>Email</b></label>
+      <input type="text" placeholder="Enter Email" name="email" required>
+      
+      <br />
+      <br />
+
+      <label for="psw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="psw" required>
+
+      <br />
+      <br />
+      <button type="button" onclick="signIn()">Sign In</button>
+      
     </main>
 
     <footer>
