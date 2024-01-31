@@ -27,13 +27,26 @@
     </header>
 
     <main>
-    <br />
+      <h1>Register Your Vacation Rental</h1>
+
+      <label for="firstname"><b>First Name</b></label>
+      <input type="text" placeholder="First Name" name="firstname" required>
+
+      <label for="lastname"><b>Last Name</b></label>
+      <input type="text" placeholder="Last Name" name="lastname" required>
       <br />
-      <h1>Discover Local Restaurants/Grocery Stores!</h1>
+      <br />
+      <label for="email"><b>Email</b></label>
+      <input type="text" placeholder="Enter Email" name="email" required>
+      
+      <label for="phone"><b>Phone Number</b></label>
+      <input type="tel" id="tel" name="varTel" placeholder="###-###-####" pattern="\d{3}-\d{3}-\d{4}" />
+      <br />
+      <br />
       <form id="addressForm" method="get" action="localRestaurants.html">
         <label for="address"></label>
         <input type="text" id="name" placeholder="Enter Vacation Rental Address" />
-        <button type="button" onclick="searchAddress()">Search</button>
+        <button type="button">Register</button>
       </form>
       <br />
       <br />
