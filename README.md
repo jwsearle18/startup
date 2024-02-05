@@ -21,4 +21,8 @@ The app will include *Authentication* because Owners will be able to register th
 
 ## HTML Deliverable
 
-- **HTML Pages** - 
+- **HTML Pages** - 8 HTML pages. Ability to login, sign up, or register your vacation rental. Ability to place an order, recieve an order, and update delivery status.  Choose vacation rental company.
+- **Links** - Links to sign in page, sign up page, registration page, as well as a page that links to a variety of vacation rentals.
+- **Text** - Text representing food options and delivery status.  Orders on the Vacation Rental Owner end.
+- **DB/Login** - Several inputs for and a button for login capabilities.  Orders are placed into a database, which is displayed on the VR Owner end.
+- **WebSocket** - The orders and delivery status are updated in realtime.
