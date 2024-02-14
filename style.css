@@ -1,0 +1,120 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #eaeaea;
+}
+
+header {
+    background-color: #333;
+    color: #f2f2f2;
+    padding: 20px;
+    text-align: left;
+}
+
+nav menu {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+}
+
+nav menu li {
+    padding: 0 10px;
+}
+
+nav menu li a {
+    color: #f2f2f2;
+    text-decoration: none;
+    font-size: 1.1em;
+    position: relative;
+    display: inline-block;
+    transition: color 0.5s;
+}
+
+nav menu li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background-color: #3498db;
+    bottom: -5px;
+    left: 0;
+    transition: width 0.5s;
+}
+
+nav menu li a:hover {
+    color: #95a5a6;
+}
+
+nav menu li a:hover::after {
+    width: 100%;
+}
+
+main {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+footer {
+    background-color: #333;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 20px;
+}
+
+footer a {
+    color: #f2f2f2;
+    text-decoration: none;
+}
+
+input[type="text"] {
+    width: 30%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+a img {
+    width: 120px; /* Set a standard width */
+    height: 120px; /* Maintain aspect ratio */
+    transition: transform 0.3s ease; /* Smooth transition for hover effect */
+    border-radius: 10px; /* Rounded corners for a modern look */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+a {
+    display: inline-flexbox;
+    margin: 15px;
+    text-decoration: none;
+}
+
+a:hover img {
+    transform: scale(1.05);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 600px) {
+    nav menu {
+        flex-direction: column;
+    }
+
+    nav menu li {
+        padding: 5px 0;
+    }
+}
