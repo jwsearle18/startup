@@ -109,6 +109,9 @@ a:hover img {
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
+
+  
+
 @media (max-width: 600px) {
     nav menu {
         flex-direction: column;
@@ -118,3 +121,5 @@ a:hover img {
         padding: 5px 0;
     }
 }
+
+
