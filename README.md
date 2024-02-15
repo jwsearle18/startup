@@ -26,3 +26,13 @@ The app will include *Authentication* because Owners will be able to register th
 - **Text** - Text representing food options and delivery status.  Orders on the Vacation Rental Owner end.
 - **DB/Login** - Several inputs for and a button for login capabilities.  Orders are placed into a database, which is displayed on the VR Owner end.
 - **WebSocket** - The orders and delivery status are updated in realtime.
+
+
+## CSS Deliverable
+
+- Each of the following is properly styled: **Header, footer, and main content body**
+- **Navigation elements** - I created a cool hovering style to my navbar
+- **Responsive to window resizing** - My app looks good on all size windows
+- **Application Elements** - Elements are styled in a consistent and sleek way.
+- **Application Text Content** - Fonts are consistent and listed preferred similar fonts based on availability
+- **Application Images** - Images, specifically on VRcompanies.html page, are styled
