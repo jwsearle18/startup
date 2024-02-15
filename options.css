@@ -1,0 +1,136 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #eaeaea;
+}
+
+header {
+  background-color: #333;
+  color: #f2f2f2;
+  padding: 20px;
+  text-align: left;
+}
+
+nav menu {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
+nav menu li {
+  padding: 0 10px;
+}
+
+nav menu li a {
+  color: #f2f2f2;
+  text-decoration: none;
+  font-size: 1.1em;
+  position: relative;
+  display: inline-block;
+  transition: color 0.5s;
+}
+
+nav menu li a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background-color: #3498db;
+  bottom: -5px;
+  left: 0;
+  transition: width 0.5s;
+}
+
+nav menu li a:hover {
+  color: #95a5a6;
+}
+
+nav menu li a:hover::after {
+  width: 100%;
+}
+
+main {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+fieldset {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 20px 0;
+}
+
+legend {
+  padding: 0 10px;
+  color: #333;
+}
+
+label {
+  display: inline;
+  margin: 20px 0;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+button {
+  width: auto;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+input[type="text"] {
+  width: auto;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: white;
+  cursor: text;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+footer {
+  background-color: #333;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 20px;
+}
+
+footer a, footer a:visited {
+  color: #3498db;
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  nav menu {
+      flex-direction: column;
+  }
+
+  nav menu li {
+      padding: 5px 0;
+  }
+}
+
+/* Style adjustments for button with <a> tag inside */
+button a, button a:visited {
+  color: white; /* Ensure text within the button is white */
+  text-decoration: none; /* Remove underline from links */
+}
+
+button a:hover {
+  text-decoration: underline; /* Optional: underline on hover for clarity */
+}
