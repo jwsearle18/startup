@@ -4,6 +4,8 @@ function selectAddress() {
     const addressInput = document.getElementById('name').value;
     
     mockDatabase.push(addressInput);
+
+    localStorage.removeItem('selectedFoodItems');
     
     localStorage.setItem('selectedAddress', addressInput);
     

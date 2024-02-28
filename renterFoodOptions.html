@@ -28,23 +28,22 @@
     <main>
       <h1>Food Options Near Your Rental</h1>
       <div id="displayAddress">Loading address...</div>
-      <input type="text" id="Snacks" placeholder="Search Available Food" />
-        <button type="button" onclick="searchFood()">Search</button>
-      <fieldset>
-        <legend>Food</legend>
-        <label for="Doritos">Doritos</label>
-        <input type="checkbox" id="Food" name="varCheckbox" value="Doritos" checked />
-        <label for="Pretzels">Pretzels</label>
-        <input type="checkbox" id="Food" name="varCheckbox" value="Pretzels" />
-        <label for="Lemonade">Lemonade</label>
-        <input type="checkbox" id="Food" name="varCheckbox" value="Lemonade" />
-        <label for="Apples">Apples</label>
-        <input type="checkbox" id="Food" name="varCheckbox" value="Apples" />
-        <label for="Eggs">Eggs</label>
-        <input type="checkbox" id="Food" name="varCheckbox" value="Eggs" />
-      </fieldset>
 
-      <button type="button"><a href="deliveryStatus.html"></a>Send Order</button>
+      <div id="foodSelection">
+  <h2>Select Your Food Items:</h2>
+  <button onclick="addItem('Doritos')">Add Doritos</button><br>
+  <button onclick="addItem('Lemonade')">Add Lemonade</button><br>
+  <button onclick="addItem('Pretzels')">Add Pretzels</button><br>
+</div>
+
+<h1>Current Order for this Vacation Rental:</h1>
+<div id="orderItems">
+  <!-- JavaScript will dynamically update this list -->
+</div>
+
+<button type="button" id="sendOrder"><a href="deliveryStatus.html"></a>Send Order</button>
+
+    
 
       <div>
         <p>** I will include an external API that searches available food based on nearby grocery store inventory. **</p>
@@ -61,6 +60,6 @@
       <br />
       <a href="https://github.com/jwsearle18/260startup">GitHub</a>
     </footer>
-    <script src="displayAddress.js"></script>
+    <script src="renterFoodOptions.js"></script>
   </body>
 </html>
