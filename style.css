@@ -1,9 +1,20 @@
+html {
+    height: 100%;
+  }
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #eaeaea;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
 }
+
+main {
+    flex: 1;
+  }
 
 header {
     background-color: #333;
