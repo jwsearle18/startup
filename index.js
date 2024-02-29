@@ -18,7 +18,6 @@ window.onload = function() {
     const selectedAddress = localStorage.getItem('selectedAddress');
     if (selectedAddress) {
         console.log('Previously selected address:', selectedAddress);
-        // I will inject the selectedAddress into the DOM in the future
     }
     
 };

@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const signInButton = document.getElementById("signInButton"); // Use the ID for selection
+    const signInButton = document.getElementById("signInButton");
 
     signInButton.addEventListener("click", function signIn() {
         const email = document.getElementsByName("email")[0].value;
         const password = document.getElementsByName("psw")[0].value;
-        const address = document.getElementsByName("vrAddress")[0].value; // Corrected to vrAddress
+        const address = document.getElementsByName("vrAddress")[0].value;
 
         const existingData = localStorage.getItem("registrations");
         const registrations = existingData ? JSON.parse(existingData) : {};
