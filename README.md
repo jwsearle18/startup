@@ -40,4 +40,6 @@ The app will include *Authentication* because Owners will be able to register th
 ## JavaScript Deliverable
 
 - **login** - On the Home page, when you type in an address, and press select, it will direct you to the renterFoodOptions page.  When you register your vacation rental, it takes you to the orders page.  If you sign in with correct credentials, it will take you to the orders page associated with that account.
-- **database** - 
+- **database** - Displayed Address for Home page address sign in.  Displays Name and Address for user that registers.  Currently stored and retrieved from local storage, but will be replaced with database data later.
+- **WebSocket** - I used the setTimeout function to delay the reception of an order on the orders page.  I used the setTimeout function to delay the deliver status updates on the deliveryStatus page.
+- **application logic** - On the orders page, the order changes based on the user's selection. Send Order button brings user to the deliverStatus page.
