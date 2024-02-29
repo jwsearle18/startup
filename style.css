@@ -120,6 +120,11 @@ a:hover img {
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
+.sign-out-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 10px 0 0;
+}
 
   
 
