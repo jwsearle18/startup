@@ -17,21 +17,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function displayOrders() {
-      const orders = JSON.parse(localStorage.getItem("orders")) || {};
-      const selectedAddress = localStorage.getItem('selectedAddress');
+    // Will retrieve data to display here
       const orderItemsElement = document.getElementById("orderItems");
-
-      if (selectedAddress && orders[selectedAddress]) {
-          const userOrderItems = orders[selectedAddress];
-          orderItemsElement.innerHTML = '';
-          userOrderItems.forEach(item => {
-              const itemElement = document.createElement('p');
-              itemElement.textContent = item;
-              orderItemsElement.appendChild(itemElement);
-          });
-      } else {
-          orderItemsElement.innerHTML = "<p>No current orders for this address.</p>";
-      }
+      orderItemsElement.innerHTML = "<p>Order will be displayed here.</p>";
   }
 
   function simulateWebSocketData() {
@@ -42,13 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
 
     setTimeout(() => {
-        const selectedAddress = localStorage.getItem('selectedAddress');
-        const orders = JSON.parse(localStorage.getItem("orders")) || {};
-
-        if (!orders[selectedAddress]) {
-            orders[selectedAddress] = [];
-        }
-
         let fullOrder = simulatedOrderItems.reduce((order, item) => {
             const quantity = Math.floor(Math.random() * 6);
             if (quantity > 0) {
@@ -57,14 +38,13 @@ document.addEventListener('DOMContentLoaded', function() {
             return order;
         }, []);
 
+        
         if (fullOrder.length > 0) {
-            orders[selectedAddress].push(fullOrder.join(" | "));
-            localStorage.setItem("orders", JSON.stringify(orders));
-            displayOrders();
+            const orderItemsElement = document.getElementById("orderItems");
+            orderItemsElement.innerHTML = `${fullOrder.join(" | ")}`;
         }
-    }, 5000);
-}
-// Simulation of Websocket data
+    }, 5000); 
+  }
 
   function signOut() {
       localStorage.removeItem('selectedAddress');
@@ -72,8 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   displayUserDetails();
-  displayOrders();
-  simulateWebSocketData();
+  displayOrders(); 
+  simulateWebSocketData(); 
 
   const signOutButton = document.getElementById('signOutButton');
   signOutButton.addEventListener('click', signOut);

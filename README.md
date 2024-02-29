@@ -36,3 +36,8 @@ The app will include *Authentication* because Owners will be able to register th
 - **Application Elements** - Elements are styled in a consistent and sleek way.
 - **Application Text Content** - Fonts are consistent and listed preferred similar fonts based on availability
 - **Application Images** - Images, specifically on VRcompanies.html page, are styled
+
+## JavaScript Deliverable
+
+- **login** - On the Home page, when you type in an address, and press select, it will direct you to the renterFoodOptions page.  When you register your vacation rental, it takes you to the orders page.  If you sign in with correct credentials, it will take you to the orders page associated with that account.
+- **database** - 
