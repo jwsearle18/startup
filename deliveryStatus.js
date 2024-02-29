@@ -20,4 +20,4 @@ document.addEventListener("DOMContentLoaded", function() {
     
     setTimeout(updateStatus, 1000);
   });
-  
+  // Future Websocket data
