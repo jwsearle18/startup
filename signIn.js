@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const signInButton = document.querySelector("button[onclick='signIn()']");
+    const signInButton = document.getElementById("signInButton"); // Use the ID for selection
 
-    function signIn() {
+    signInButton.addEventListener("click", function signIn() {
         const email = document.getElementsByName("email")[0].value;
         const password = document.getElementsByName("psw")[0].value;
-        const address = document.getElementsByName("address")[0].value;
+        const address = document.getElementsByName("vrAddress")[0].value; // Corrected to vrAddress
 
         const existingData = localStorage.getItem("registrations");
         const registrations = existingData ? JSON.parse(existingData) : {};
@@ -19,7 +19,5 @@ document.addEventListener("DOMContentLoaded", function() {
         } else {
             alert("No registration found for the given address. Please check your details and try again.");
         }
-    }
-
-    signInButton.addEventListener("click", signIn);
+    });
 });
