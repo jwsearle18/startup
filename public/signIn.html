@@ -7,6 +7,8 @@
     <title>Airestock HTML</title>
     <link rel="icon" href="favicon.ico" />
     <link rel="stylesheet" href="style.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfqDQ7sQ1Ulxja_D7DhEn-_ry2GdUXDIU&libraries=places&callback=initAutocomplete" async defer></script>
+
   </head>
   <body>
     <!-- Use header, main, and footer elements to give semantic structure -->
@@ -30,7 +32,7 @@
       <h1>Sign In</h1>
 
       <label for="vrAddress"><b>Vacation Rental Address</b></label>
-      <input type="text" placeholder="Enter Vacation Rental Address" name="vrAddress" required>
+      <input type="text" id="vacationRentalAddress" placeholder="Enter Vacation Rental Address" name="vrAddress" required>
 
       <br />
 
