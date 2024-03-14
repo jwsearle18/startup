@@ -7,6 +7,9 @@
     <title>Airestock HTML</title>
     <link rel="icon" href="favicon.ico" />
     <link rel="stylesheet" href="style.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfqDQ7sQ1Ulxja_D7DhEn-_ry2GdUXDIU&libraries=places&callback=initAutocomplete" async defer></script>
+
+
     
   </head>
   
@@ -37,11 +40,11 @@
       <h1>Discover Food Available at your Vacation Rental Location!</h1>
       <form id="addressForm" method="get" action="renterFoodOptions.html">
         <label for="address"></label>
-        <input type="text" id="name" placeholder="Enter Vacation Rental Address" />
-        <button type="button" onclick="selectAddress()">Select</button>
+        <input type="text" id="autocomplete" placeholder="Enter Vacation Rental Address" />
+        <button type="button" id="selectButton">Select</button>
       </form>
-      <br/>
-      <p> ** I will include an address validation API **</p>
+      <!-- <br/>
+      <p> ** I will include an address validation API **</p> -->
       <br />
       <br />
     </main>
