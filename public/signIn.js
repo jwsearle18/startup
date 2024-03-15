@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", function() {
     signInButton.addEventListener("click", function signIn() {
         const email = document.getElementsByName("email")[0].value;
         const password = document.getElementsByName("psw")[0].value;
-        // Fetch the place from the autocomplete object instead of the input value directly
         const place = autocomplete.getPlace();
 
         if (!place || !place.geometry) {
@@ -29,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const existingData = localStorage.getItem("registrations");
         const registrations = existingData ? JSON.parse(existingData) : {};
 
-        // Find registration by iterating over registrations as the address format might change
         const registration = Object.values(registrations).find(reg => reg.address === address);
 
         if (registration) {

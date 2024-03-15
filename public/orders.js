@@ -24,9 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(orders => {
           const orderItemsElement = document.getElementById("orderItems");
-          // Clear any placeholder or previous content
           orderItemsElement.innerHTML = '';
-          // Assuming 'orders' is an array of items
           orders.forEach(order => {
             const orderElement = document.createElement("p");
             orderElement.textContent = `${order.name} x${order.quantity}`;

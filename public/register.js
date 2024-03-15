@@ -9,7 +9,7 @@ function initAutocomplete() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    initAutocomplete(); // Initialize the autocomplete function
+    initAutocomplete();
 
     const form = document.getElementById("addressForm");
     const registerButton = form.querySelector("button[type='button']");
@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const lastname = document.getElementsByName("lastname")[0].value;
         const email = document.getElementsByName("email")[0].value;
         const password = document.getElementsByName("password")[0].value;
-        // Update to fetch the address from autocomplete.getPlace()
         const place = autocomplete.getPlace();
 
         if (!place || !place.geometry) {
@@ -47,8 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const address = place.address_components.map(component => component.long_name).join(', ');
 
-        // Validate the address through the API
-        const isValidAddress = await validateAddress(address); // You can adjust this as needed
+        const isValidAddress = await validateAddress(address);
 
         if (!isValidAddress) {
             alert("The address entered is not valid. Please try again.");
