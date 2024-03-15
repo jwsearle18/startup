@@ -17,7 +17,7 @@ function searchProducts() {
   
 function displayGroceryProducts(products) {
     const foodSelection = document.getElementById('foodSelection');
-    foodSelection.innerHTML = ''; // Clear previous search results
+    foodSelection.innerHTML = '';
 
     products.forEach(product => {
         const productContainer = document.createElement('div');
@@ -46,7 +46,6 @@ function displayGroceryProducts(products) {
         quantityControl.appendChild(decreaseButton);
         quantityControl.appendChild(increaseButton);
 
-        // Adjusting the order of elements
         productContainer.appendChild(name);
         productContainer.appendChild(img);
         productContainer.appendChild(quantityControl);
@@ -64,6 +63,8 @@ function adjustQuantity(productName, action) {
             selectedItems[productIndex].quantity += 1;
         } else if (action === 'decrease' && selectedItems[productIndex].quantity > 0) {
             selectedItems[productIndex].quantity -= 1;
+        } else {
+            selectedItems.splice(productIndex, 1);
         }
     } else if (action === 'increase') {
         selectedItems.push({ name: productName, quantity: 1 });
@@ -78,8 +79,10 @@ function updateOrderDisplay() {
     orderItemsElement.innerHTML = '';
   
     const selectedItems = JSON.parse(localStorage.getItem('selectedFoodItems')) || [];
+
+    const itemsToDisplay = selectedItems.filter(item => item.quantity > 0);
   
-    selectedItems.forEach(item => {
+    itemsToDisplay.forEach(item => {
         const itemElement = document.createElement('p');
         itemElement.textContent = `${item.name} x${item.quantity}`;
         itemElement.classList.add('order-item');
@@ -96,17 +99,15 @@ function updateOrderDisplay() {
         document.getElementById('displayAddress').textContent = 'No address selected.';
     }
     
-    // displayGroceryProducts([]);
     updateOrderDisplay();
 
     document.getElementById("searchButton").addEventListener("click", function() {
         searchProducts();
       });
     
-      // Add an event listener for the Enter key on the product search query input
       document.getElementById("productSearchQuery").addEventListener("keypress", function(event) {
-        if (event.key === "Enter") { // Could also use event.keyCode === 13 for older browsers
-          event.preventDefault(); // Prevent the default action to stop submitting the form
+        if (event.key === "Enter") {
+          event.preventDefault(); 
           searchProducts();
         }
       });

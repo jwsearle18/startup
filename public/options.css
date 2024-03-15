@@ -180,3 +180,54 @@ button {
 button:hover {
   background-color: #45a049;
 }
+
+#foodSelection {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust size as needed */
+  gap: 20px; /* Space between items */
+  justify-content: center;
+  padding: 20px;
+}
+
+.product-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.product-name {
+  margin-bottom: 10px; /* Space between the name and the image */
+}
+
+.product-image {
+  width: 100px; /* Adjust size as needed */
+  height: 100px; /* Adjust size as needed */
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.quantity-control {
+  display: flex;
+  border: 1px solid #ccc; /* Border around the whole quantity control */
+  border-radius: 5px;
+}
+
+.quantity-control button {
+  background-color: #e0e0e0;
+  color: black;
+  padding: 5px 10px;
+  border: none; /* Remove borders between buttons */
+  display: inline-block;
+}
+
+.quantity-control button:first-child {
+  border-radius: 5px 0 0 5px; /* Rounded corners on the left */
+}
+
+.quantity-control button:last-child {
+  border-radius: 0 5px 5px 0; /* Rounded corners on the right */
+}
