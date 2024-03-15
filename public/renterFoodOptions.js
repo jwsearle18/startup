@@ -61,10 +61,12 @@ function adjustQuantity(productName, action) {
     if (productIndex !== -1) {
         if (action === 'increase') {
             selectedItems[productIndex].quantity += 1;
-        } else if (action === 'decrease' && selectedItems[productIndex].quantity > 0) {
-            selectedItems[productIndex].quantity -= 1;
-        } else {
-            selectedItems.splice(productIndex, 1);
+        } else if (action === 'decrease') {
+            if (selectedItems[productIndex].quantity > 1) {
+                selectedItems[productIndex].quantity -= 1;
+            } else {
+                selectedItems.splice(productIndex, 1);
+            }
         }
     } else if (action === 'increase') {
         selectedItems.push({ name: productName, quantity: 1 });
@@ -117,19 +119,24 @@ function updateOrderDisplay() {
   document.getElementById("sendOrder").addEventListener("click", function() {
     const currentAddress = sessionStorage.getItem("selectedAddress");
     const selectedItems = JSON.parse(localStorage.getItem("selectedFoodItems")) || [];
-    const orders = JSON.parse(localStorage.getItem("orders")) || {};
-  
+    
     if (selectedItems.length > 0) {
-        if (!orders[currentAddress]) {
-            orders[currentAddress] = [];
+      fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ address: currentAddress, items: selectedItems }),
+      })
+      .then(response => {
+        if (response.ok) {
+          localStorage.removeItem("selectedFoodItems");
+          window.location.href = "deliveryStatus.html";
+        } else {
+          alert("Failed to create the order.");
         }
-  
-        orders[currentAddress] = orders[currentAddress].concat(selectedItems);
-  
-        localStorage.setItem("orders", JSON.stringify(orders)); 
-        localStorage.removeItem("selectedFoodItems");
-        window.location.href = "deliveryStatus.html";
+      });
     } else {
-        alert("No items selected for the order.");
+      alert("No items selected for the order.");
     }
   });
