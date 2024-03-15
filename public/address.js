@@ -17,14 +17,14 @@ function selectAddress() {
   } else {
       let address = place.address_components.map(component => component.long_name).join(', ');
       
-      localStorage.setItem('selectedAddress', address);
+      sessionStorage.setItem('selectedAddress', address);
       
       console.log('Address selected:', address);
   }
 }
 
 function redirectToNextPage() {
-  const address = localStorage.getItem('selectedAddress');
+  const address = sessionStorage.getItem('selectedAddress');
   if (address) {
       window.location.href = 'renterFoodOptions.html';
   } else {
@@ -35,9 +35,15 @@ function redirectToNextPage() {
 document.addEventListener('DOMContentLoaded', function() {
   initAutocomplete(); 
 
-  document.getElementById('selectButton').addEventListener('click', redirectToNextPage);
+  document.getElementById('selectButton').addEventListener('click', function() {
+    selectAddress(); 
 
-  const selectedAddress = localStorage.getItem('selectedAddress');
+    setTimeout(function() {
+      redirectToNextPage();
+    }, 500);
+  });
+
+  const selectedAddress = sessionStorage.getItem('selectedAddress');
   if (selectedAddress) {
       console.log('Previously selected address:', selectedAddress);
   }

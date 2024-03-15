@@ -14,7 +14,20 @@ app.use(express.static('public'));
 const apiRouter = express.Router();
 app.use(`/api`, apiRouter);
 
+apiRouter.get('/searchGroceryProducts', async (req, res) => {
+  const query = req.query.query;
+  const apiKey = 'bfbf551c64974ba1b23c22788e0b29bd';
+  const spoonacularUrl = `https://api.spoonacular.com/food/ingredients/search?query=${query}&number=10&apiKey=${apiKey}`;
 
+  try {
+      const response = await fetch(spoonacularUrl);
+      const data = await response.json();
+      res.json(data);
+  } catch (error) {
+      console.error('Error fetching grocery products:', error);
+      res.status(500).send('Error fetching grocery products');
+  }
+});
 
 // Return the application's default page if the path is unknown
 app.use((_req, res) => {
