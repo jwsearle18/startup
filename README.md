@@ -46,4 +46,10 @@ The app will include *Authentication* because Owners will be able to register th
 
 ## Service Deliverable
 
-For this deliverable I added backend enpoints that 
+For this deliverable I added backend enpoints that receive orders associated with an address, and returns displays returns that order to the rental owner associated with that address.
+
+ - **Node.js/Express HTTP service** - DONE
+ - **Static middleware for frontend** - DONE
+ - **Calls to third party endpoints** - I've implemented the google places api that autofills addresses on each page that required entering an address.  I also implemented a grocery api in my renterFoodOptions page.
+ - **Backend service endpoints** - Placeholders for login that stores the current user on the server.  Endpoints for orders.
+ - **Frontend calls service endpoints** - I used the fetch function
