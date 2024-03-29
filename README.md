@@ -53,3 +53,13 @@ For this deliverable I added backend enpoints that receive orders associated wit
  - **Calls to third party endpoints** - I've implemented the google places api that autofills addresses on each page that required entering an address.  I also implemented a grocery api in my renterFoodOptions page.
  - **Backend service endpoints** - Placeholders for login that stores the current user on the server.  Endpoints for orders.
  - **Frontend calls service endpoints** - I used the fetch function
+
+ ## DB/Login Deliverable
+
+For this deliverable I associated the order with the address
+
+ - **MongoDB Atlas database created** - DONE
+ - **Stores data in MongoDB** - DONE
+ - **Existing User** - 
+ - **Use MongoDB to store credentials** - 
+ - **Restricts Functionality** - 

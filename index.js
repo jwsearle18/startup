@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const DB = require('./database.js');
 // const fetch = require('node-fetch');
 const ordersByAddress = {};
 
@@ -53,6 +54,25 @@ apiRouter.get('/orders/:address', (req, res) => {
 });
 
 
+
+async function dissociateExpiredAddresses() {
+  const today = new Date();
+  const expiredAssociations = await DB.userCollection.find({
+    "addressAssociations.endDate": { $lt: today },
+    "role": "renter",
+  }).toArray();
+
+  for (const user of expiredAssociations) {
+    for (const association of user.addressAssociations) {
+      if (association.endDate < today) {
+        await DB.dissociateAddress(user.email, association.address);
+      }
+    }
+  }
+}
+
+setInterval(dissociateExpiredAddresses, 24 * 60 * 60 * 1000);
+
 // Return the application's default page if the path is unknown
 app.use((_req, res) => {
   res.sendFile('index.html', { root: 'public' });
@@ -60,4 +80,5 @@ app.use((_req, res) => {
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
+  dissociateExpiredAddresses();
 });
