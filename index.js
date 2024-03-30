@@ -1,10 +1,12 @@
+const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
 const express = require('express');
 const app = express();
 const DB = require('./database.js');
+
 // const fetch = require('node-fetch');
-const ordersByAddress = {};
 
-
+const authCookieName = 'token';
 
 // The service port. In production the frontend code is statically hosted by the service on the same port.
 const port = process.argv.length > 2 ? process.argv[2] : 3003;
@@ -12,12 +14,20 @@ const port = process.argv.length > 2 ? process.argv[2] : 3003;
 // JSON body parsing using built-in middleware
 app.use(express.json());
 
+// Use the cookie parser middleware for tracking authentication tokens
+app.use(cookieParser());
+
 // Serve up the frontend static content hosting
 app.use(express.static('public'));
+
+// Trust headers that are forwarded from the proxy so we can determine IP addresses
+app.set('trust proxy', true);
 
 // Router for service endpoints
 const apiRouter = express.Router();
 app.use(`/api`, apiRouter);
+
+
 
 apiRouter.get('/searchGroceryProducts', async (req, res) => {
   const query = req.query.query;
@@ -38,11 +48,12 @@ apiRouter.get('/searchGroceryProducts', async (req, res) => {
 apiRouter.post('/register/owner', async (req, res) => {
   const { email, password, address } = req.body;
   try {
-      const user = await DB.createUser(email, password, 'owner', address);
-      res.status(201).json({ message: "Owner registered successfully" });
+    const user = await DB.createUser(email, password, 'owner', address);
+    setAuthCookie(res, user.token); // Set the auth cookie
+    res.status(201).json({ message: "Owner registered successfully", userId: user._id });
   } catch (error) {
-      console.error('Registration error:', error);
-      res.status(500).send('Error registering owner');
+    console.error('Registration error:', error);
+    res.status(500).send('Error registering owner');
   }
 });
 
@@ -51,6 +62,7 @@ apiRouter.post('/register/renter', async (req, res) => {
   const { email, password } = req.body;
   try {
       const user = await DB.createUser(email, password, 'renter');
+      setAuthCookie(res, user.token); // Set the auth cookie
       res.status(201).json({ message: "Renter registered successfully" });
   } catch (error) {
       console.error('Registration error:', error);
@@ -110,6 +122,23 @@ apiRouter.get('/orders/:address', async (req, res) => {
       res.status(500).send('Error retrieving orders');
   }
 });
+
+apiRouter.delete('/auth/logout', (req, res) => {
+  res.clearCookie(authCookieName);
+  res.status(204).send("Logged out successfully");
+});
+
+secureApiRouter.use(async (req, res, next) => {
+  const authToken = req.cookies[authCookieName];
+  const user = await DB.getUserByToken(authToken);
+  if (user) {
+    req.user = user; // Optionally, attach user to the request for downstream use
+    next();
+  } else {
+    res.status(401).send({ msg: 'Unauthorized' });
+  }
+});
+
 
 setInterval(DB.dissociateExpiredAddresses, 24 * 60 * 60 * 1000);
 

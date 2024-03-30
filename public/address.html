@@ -34,12 +34,24 @@
     <br />
       <br />
       <h1>Discover Food Available at your Vacation Rental Location!</h1>
-      <form id="addressForm" method="get" action="renterFoodOptions.html">
-        <label for="address"></label>
-        <input type="text" id="autocomplete" placeholder="Enter Vacation Rental Address" />
-        <button type="button" id="selectButton">Select</button>
+      <form id="addressForm">
+        <div class="input-container">
+          <label for="autocomplete"><b>Address</b></label>
+          <input type="text" id="autocomplete" placeholder="Where will you be staying?" />
+        </div>
+        <br />
+        <div class="input-container">
+          <label for="startDate"><b>Start Date</b></label>
+          <input type="date" id="startDate" name="startDate" required>
+        </div>
+        <br />
+        <div class="input-container">
+          <label for="endDate"><b>End Date</b></label>
+          <input type="date" id="endDate" name="endDate" required>
+        </div>
+        <br />
+        <button type="button" id="submitAddress">Submit</button>
       </form>
-
       <br />
     </main>
     
