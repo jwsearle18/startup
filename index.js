@@ -80,11 +80,11 @@ apiRouter.post('/auth/login', async (req, res) => {
         userAddress = user.addressAssociations[0].address;
       }
 
-      res.send({ userId: user._id.toString(), userAddress }); // Send the user's unique ID as a string
+      res.send({ userId: user._id.toString(), userAddress, role: user.role }); // Send the user's unique ID as a string
       return;
     }
   }
-  res.status(401).send({ msg: 'Unauthorized' });
+  res.status(401).send({ msg: 'Incorrect Email or Password' });
 });
 
 // secureApiRouter verifies credentials for endpoints

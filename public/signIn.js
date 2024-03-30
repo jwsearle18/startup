@@ -21,8 +21,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (data.userAddress) {
                     localStorage.setItem('userAddress', data.userAddress); // Store user address if present
                 }
-                // Redirect the user to the orders page or their dashboard
-                window.location.href = "orders.html";
+                const redirectTo = data.role === 'owner' ? 'orders.html' : 'renterFoodOptions.html';
+                window.location.href = redirectTo;
             } else {
                 // Handle failed sign-in attempts
                 const errorText = await response.text();
