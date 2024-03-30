@@ -27,7 +27,19 @@ app.set('trust proxy', true);
 const apiRouter = express.Router();
 app.use(`/api`, apiRouter);
 
+// secureApiRouter verifies credentials for endpoints
+var secureApiRouter = express.Router();
+apiRouter.use(secureApiRouter);
 
+secureApiRouter.use(async (req, res, next) => {
+  authToken = req.cookies[authCookieName];
+  const user = await DB.getUserByToken(authToken);
+  if (user) {
+    next();
+  } else {
+    res.status(401).send({ msg: 'Unauthorized' });
+  }
+});
 
 apiRouter.get('/searchGroceryProducts', async (req, res) => {
   const query = req.query.query;
@@ -126,17 +138,6 @@ apiRouter.get('/orders/:address', async (req, res) => {
 apiRouter.delete('/auth/logout', (req, res) => {
   res.clearCookie(authCookieName);
   res.status(204).send("Logged out successfully");
-});
-
-secureApiRouter.use(async (req, res, next) => {
-  const authToken = req.cookies[authCookieName];
-  const user = await DB.getUserByToken(authToken);
-  if (user) {
-    req.user = user; // Optionally, attach user to the request for downstream use
-    next();
-  } else {
-    res.status(401).send({ msg: 'Unauthorized' });
-  }
 });
 
 
