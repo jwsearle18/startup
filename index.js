@@ -69,6 +69,24 @@ apiRouter.post('/register/renter', async (req, res) => {
   }
 });
 
+apiRouter.post('/auth/login', async (req, res) => {
+  const user = await DB.getUser(req.body.email);
+  if (user) {
+    if (await bcrypt.compare(req.body.password, user.password)) {
+      setAuthCookie(res, user.token);
+
+      let userAddress = null;
+      if (user.addressAssociations && user.addressAssociations.length > 0) {
+        userAddress = user.addressAssociations[0].address;
+      }
+
+      res.send({ userId: user._id.toString(), userAddress }); // Send the user's unique ID as a string
+      return;
+    }
+  }
+  res.status(401).send({ msg: 'Unauthorized' });
+});
+
 // secureApiRouter verifies credentials for endpoints
 var secureApiRouter = express.Router();
 apiRouter.use(secureApiRouter);

@@ -45,8 +45,6 @@ async function createUser(email, password, role, address = null) {
     return user;
 }
 
-
-
 async function associateAddress(userId, address, startDate, endDate) {
     const objectId = new ObjectId(userId);
 

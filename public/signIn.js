@@ -1,44 +1,36 @@
-let autocomplete;
-
-function initAutocomplete() {
-    autocomplete = new google.maps.places.Autocomplete(
-        document.getElementById('vacationRentalAddress'), {types: ['geocode']}
-    );
-
-    autocomplete.setFields(['address_components', 'geometry', 'name']);
-}
-
 document.addEventListener("DOMContentLoaded", function() {
-    initAutocomplete();
+    const signInForm = document.getElementById("signInForm");
 
-    const signInButton = document.getElementById("signInButton");
+    signInForm.addEventListener("submit", async function(event) {
+        event.preventDefault(); // Prevent the form from submitting in the traditional way
 
-    signInButton.addEventListener("click", function signIn() {
-        const email = document.getElementsByName("email")[0].value;
-        const password = document.getElementsByName("psw")[0].value;
-        const place = autocomplete.getPlace();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("psw").value;
 
-        if (!place || !place.geometry) {
-            alert("No details available for input: '" + place.name + "'");
-            return;
-        }
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
 
-        const address = place.address_components.map(component => component.long_name).join(', ');
-
-        const existingData = localStorage.getItem("registrations");
-        const registrations = existingData ? JSON.parse(existingData) : {};
-
-        const registration = Object.values(registrations).find(reg => reg.address === address);
-
-        if (registration) {
-            if (registration.email === email && registration.password === password) {
-                localStorage.setItem("selectedAddress", address);
+            if (response.ok) {
+                // If sign-in is successful, you might want to store the returned token or user ID in local storage
+                const data = await response.json();
+                localStorage.setItem('userId', data.userId);
+                if (data.userAddress) {
+                    localStorage.setItem('userAddress', data.userAddress); // Store user address if present
+                }
+                // Redirect the user to the orders page or their dashboard
                 window.location.href = "orders.html";
             } else {
-                alert("Incorrect email or password. Please try again.");
+                // Handle failed sign-in attempts
+                const errorText = await response.text();
+                alert('Sign-in failed: ' + errorText);
             }
-        } else {
-            alert("No registration found for the given address. Please check your details and try again.");
+        } catch (error) {
+            console.error('Error during sign-in:', error);
+            alert('An error occurred during sign-in. Please try again.');
         }
     });
 });

@@ -8,8 +8,6 @@
     <link rel="icon" href="favicon.ico" />
     <link rel="stylesheet" href="style.css">
     <script src="signIn.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfqDQ7sQ1Ulxja_D7DhEn-_ry2GdUXDIU&libraries=places&callback=initAutocomplete" async defer></script>
-
   </head>
   <body>
     <!-- Use header, main, and footer elements to give semantic structure -->
@@ -30,20 +28,22 @@
 
     <main>
       <h1>Sign In</h1>
+      <form id="signInForm">
+        <div class="input-container">
+          <label for="email"><b>Email</b></label>
+          <input type="text" placeholder="Enter Email" id="email" name="email" required>
+        </div>
+        
+        <br />
 
-      <label for="email"><b>Email</b></label>
-      <input type="text" placeholder="Enter Email" name="email" required>
-      
-      <br />
-      <br />
+        <div class="input-container">
+          <label for="psw"><b>Password</b></label>
+          <input type="password" placeholder="Enter Password" id="psw" name="psw" required>
+        </div>
 
-      <label for="psw"><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="psw" required>
-
-      <br />
-      <br />
-      <button type="button" id="signInButton">Sign In</button>
-      
+        <br />
+        <button type="submit">Sign In</button>
+      </form>
     </main>
 
     <footer>

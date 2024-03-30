@@ -62,10 +62,27 @@ document.addEventListener('DOMContentLoaded', function() {
 //     }, 5000); 
 //   }
 
-  function signOut() {
-      localStorage.removeItem('selectedAddress');
+async function signOut() {
+  try {
+    const response = await fetch('/api/auth/logout', { method: 'DELETE' });
+    if (response.ok) {
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userAddress'); 
+
+      // Redirect to the login page or home page
       window.location.href = 'index.html';
+    } else {
+      alert('Failed to sign out. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error signing out:', error);
+    alert('An error occurred while trying to sign out. Please try again.');
   }
+}
+
+// Add event listener for sign-out button
+document.getElementById('signOutButton').addEventListener('click', signOut);
+
 
   displayUserDetails();
   displayOrders(); 
