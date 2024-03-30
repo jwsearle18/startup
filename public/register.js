@@ -1,68 +1,101 @@
 let autocomplete;
 
 function initAutocomplete() {
-    autocomplete = new google.maps.places.Autocomplete(
-        document.getElementById('vacationRentalAddress'), {types: ['geocode']}
-    );
+    // Ensure this function can safely run multiple times by removing any existing autocomplete instance if needed
+    if (window.autocomplete) {
+        google.maps.event.clearInstanceListeners(window.autocomplete);
+    }
 
-    autocomplete.setFields(['address_components', 'geometry', 'name']);
+    const addressInput = document.getElementById('vacationRentalAddress');
+    if (addressInput) {
+        window.autocomplete = new google.maps.places.Autocomplete(addressInput, { types: ['geocode'] });
+        window.autocomplete.setFields(['address_components', 'geometry', 'name']);
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    initAutocomplete();
+    const form = document.getElementById("registrationForm");
+    const roleSelector = document.getElementById("role");
 
-    const form = document.getElementById("addressForm");
-    const registerButton = form.querySelector("button[type='button']");
+    roleSelector.addEventListener("change", function() {
+        toggleAddressField(this.value);
+    });
 
-    async function validateAddress(address) {
-        // Placeholder for address validation logic
-        return true;
-    }
-
-    function saveToLocalStorage(data) {
-        const uniqueID = data.address;
-
-        const existingData = localStorage.getItem("registrations");
-        const registrations = existingData ? JSON.parse(existingData) : {};
-
-        registrations[uniqueID] = data;
-
-        localStorage.setItem("registrations", JSON.stringify(registrations));
-    }
-
-    async function handleSubmit(event) {
+    form.addEventListener("submit", async (event) => {
         event.preventDefault();
+        const role = form.role.value;
+        const email = form.email.value;
+        const password = form.password.value;
+        let address = null;
 
-        const firstname = document.getElementsByName("firstname")[0].value;
-        const lastname = document.getElementsByName("lastname")[0].value;
-        const email = document.getElementsByName("email")[0].value;
-        const password = document.getElementsByName("password")[0].value;
-        const place = autocomplete.getPlace();
-
-        if (!place || !place.geometry) {
-            alert("No details available for input: '" + place.name + "'");
-            return;
+        if (role === "owner") {
+            address = document.getElementById('vacationRentalAddress')?.value || "";
+            registerOwner(email, password, address);
+        } else {
+            registerRenter(email, password);
         }
-
-        const address = place.address_components.map(component => component.long_name).join(', ');
-
-        const isValidAddress = await validateAddress(address);
-
-        if (!isValidAddress) {
-            alert("The address entered is not valid. Please try again.");
-            return;
-        }
-
-        const registrationData = { firstname, lastname, email, password, address };
-
-        saveToLocalStorage(registrationData);
-
-        localStorage.setItem("selectedAddress", address);
-
-        localStorage.removeItem("selectedFoodItems");
-
-        window.location.href = "orders.html";
-    }
-
-    registerButton.addEventListener("click", handleSubmit);
+    });
 });
+
+function toggleAddressField(role) {
+    let addressInput = document.getElementById('vacationRentalAddress');
+    
+    if (role === "owner" && !addressInput) {
+        const addressContainer = document.createElement("div");
+        addressContainer.className = "input-container";
+        addressContainer.innerHTML = `
+            <label for="vacationRentalAddress"><b>Address</b></label>
+            <input type="text" id="vacationRentalAddress" name="vacationRentalAddress" placeholder="Enter Vacation Rental Address" required>
+        `;
+        const submitButton = document.querySelector("form button[type='submit']");
+        submitButton.before(addressContainer);
+
+        initAutocomplete();
+    } else if (role !== "owner" && addressInput) {
+        addressInput.parentNode.remove();
+    }
+}
+
+async function registerOwner(email, password, address) {
+    try {
+        const response = await fetch('/api/register/owner', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password, address }),
+        });
+
+        if (response.ok) {
+            window.location.href = "orders.html";
+        } else {
+            console.error('Error registering owner');
+            // Handle errors, e.g., show a message to the user
+        }
+    } catch (error) {
+        console.error('Registration error:', error);
+    }
+}
+
+async function registerRenter(email, password) {
+    try {
+        const response = await fetch('/api/register/renter', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+        });
+
+        if (response.ok) {
+            window.location.href = "address.html"; // Assuming this page will handle address association for renters
+        } else {
+            console.error('Error registering renter');
+            // Handle errors, e.g., show a message to the user
+        }
+    } catch (error) {
+        console.error('Registration error:', error);
+    }
+}
+
+initAutocomplete();
