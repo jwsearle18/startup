@@ -4,6 +4,8 @@ const DB = require('./database.js');
 // const fetch = require('node-fetch');
 const ordersByAddress = {};
 
+
+
 // The service port. In production the frontend code is statically hosted by the service on the same port.
 const port = process.argv.length > 2 ? process.argv[2] : 3003;
 
@@ -32,46 +34,84 @@ apiRouter.get('/searchGroceryProducts', async (req, res) => {
   }
 });
 
-apiRouter.post('/orders', (req, res) => {
-  const { address, items } = req.body;
-
-  if (!address || !items) {
-    return res.status(400).send('Missing address or items');
+// Register an owner
+apiRouter.post('/register/owner', async (req, res) => {
+  const { email, password, address } = req.body;
+  try {
+      const user = await DB.createUser(email, password, 'owner', address);
+      res.status(201).json({ message: "Owner registered successfully" });
+  } catch (error) {
+      console.error('Registration error:', error);
+      res.status(500).send('Error registering owner');
   }
-
-  if (!ordersByAddress[address]) {
-    ordersByAddress[address] = [];
-  }
-
-  ordersByAddress[address].push(...items);
-  res.status(201).send('Order created');
 });
 
-apiRouter.get('/orders/:address', (req, res) => {
+// Register a renter
+apiRouter.post('/register/renter', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+      const user = await DB.createUser(email, password, 'renter');
+      res.status(201).json({ message: "Renter registered successfully" });
+  } catch (error) {
+      console.error('Registration error:', error);
+      res.status(500).send('Error registering renter');
+  }
+});
+
+// Renter associates an address to their account
+apiRouter.post('/renter/associate-address', async (req, res) => {
+  const { email, address, startDate, endDate } = req.body;
+  try {
+      await DB.associateAddress(email, address, startDate, endDate);
+      res.status(200).json({ message: "Address associated successfully" });
+  } catch (error) {
+      console.error('Association error:', error);
+      res.status(500).send('Error associating address');
+  }
+});
+
+
+apiRouter.post('/orders', async (req, res) => {
+  const { userId, address, items } = req.body;
+  
+  // Verify that the renter is currently associated with the address
+  const canOrder = await DB.canPlaceOrder(userId, address);
+  if (!canOrder) {
+      return res.status(403).send("You're not authorized to place an order for this address.");
+  }
+
+  // If authorized, proceed to add the order
+  try {
+      await DB.addOrder({ userId, address, items });
+      res.status(201).send('Order placed successfully.');
+  } catch (error) {
+      console.error('Order placement error:', error);
+      res.status(500).send('Error placing order');
+  }
+});
+
+
+apiRouter.get('/orders/:address', async (req, res) => {
   const { address } = req.params;
-  const orders = ordersByAddress[address] || [];
-  res.json(orders);
+  const userId = req.userId; // Assuming you have a way to identify the user (e.g., from a session or token)
+
+  // Verify that the requester is the owner of the address
+  const isOwner = await DB.isOwnerOfAddress(userId, address);
+  if (!isOwner) {
+      return res.status(403).send("You're not authorized to view orders for this address.");
+  }
+
+  // If authorized, proceed to retrieve and send orders for the address
+  try {
+      const orders = await DB.getOrdersByAddress(address);
+      res.json(orders);
+  } catch (error) {
+      console.error('Error retrieving orders:', error);
+      res.status(500).send('Error retrieving orders');
+  }
 });
 
-
-
-async function dissociateExpiredAddresses() {
-  const today = new Date();
-  const expiredAssociations = await DB.userCollection.find({
-    "addressAssociations.endDate": { $lt: today },
-    "role": "renter",
-  }).toArray();
-
-  for (const user of expiredAssociations) {
-    for (const association of user.addressAssociations) {
-      if (association.endDate < today) {
-        await DB.dissociateAddress(user.email, association.address);
-      }
-    }
-  }
-}
-
-setInterval(dissociateExpiredAddresses, 24 * 60 * 60 * 1000);
+setInterval(DB.dissociateExpiredAddresses, 24 * 60 * 60 * 1000);
 
 // Return the application's default page if the path is unknown
 app.use((_req, res) => {
@@ -80,5 +120,5 @@ app.use((_req, res) => {
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
-  dissociateExpiredAddresses();
+  DB.dissociateExpiredAddresses();
 });
