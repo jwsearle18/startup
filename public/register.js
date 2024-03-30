@@ -30,10 +30,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (role === "owner") {
             address = document.getElementById('vacationRentalAddress')?.value || "";
-            registerOwner(email, password, address);
-        } else {
-            registerRenter(email, password);
         }
+
+        registerUser(role, email, password, address);
     });
 });
 
@@ -56,46 +55,37 @@ function toggleAddressField(role) {
     }
 }
 
-async function registerOwner(email, password, address) {
-    try {
-        const response = await fetch('/api/register/owner', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password, address }),
-        });
-
-        if (response.ok) {
-            window.location.href = "orders.html";
-        } else {
-            console.error('Error registering owner');
-            // Handle errors, e.g., show a message to the user
-        }
-    } catch (error) {
-        console.error('Registration error:', error);
+async function registerUser(role, email, password, address = null) {
+    // Adjust the endpoint based on role
+    const endpoint = role === 'owner' ? '/api/register/owner' : '/api/register/renter';
+    const payload = { email, password };
+    if (role === 'owner') {
+        payload.address = address
+        localStorage.setItem('userAddress', address);
     }
-}
-
-async function registerRenter(email, password) {
+  
     try {
-        const response = await fetch('/api/register/renter', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-        });
-
-        if (response.ok) {
-            window.location.href = "address.html"; // Assuming this page will handle address association for renters
-        } else {
-            console.error('Error registering renter');
-            // Handle errors, e.g., show a message to the user
-        }
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        // Store the user's _id in localStorage for later use
+        localStorage.setItem('userId', data.userId);
+        
+        // Redirect based on role
+        const redirectTo = role === 'owner' ? 'orders.html' : 'address.html';
+        window.location.href = redirectTo;
+      } else {
+        alert('Registration failed: ' + data.message);
+      }
     } catch (error) {
-        console.error('Registration error:', error);
+      alert('Error during registration: ' + error.message);
     }
-}
+  }
+  
 
 initAutocomplete();

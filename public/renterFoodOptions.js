@@ -93,7 +93,7 @@ function updateOrderDisplay() {
 }
   
   document.addEventListener('DOMContentLoaded', function() {
-    const savedAddress = sessionStorage.getItem('selectedAddress');
+    const savedAddress = localStorage.getItem('userAddress');
     
     if (savedAddress) {
         document.getElementById('displayAddress').textContent = `Address: ${savedAddress}`;

@@ -1,8 +1,7 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const config = require('./dbConfig.json');
-
 
 const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
 const client = new MongoClient(url);
@@ -46,21 +45,38 @@ async function createUser(email, password, role, address = null) {
     return user;
 }
 
-async function associateAddress(email, address, startDate, endDate) {
-    const user = await userCollection.findOne({ email: email });
-    if (user && user.role === 'renter') {
-        await userCollection.updateOne(
-            { email: email },
-            { $push: { addressAssociations: { address, startDate, endDate } } }
-        );
-    } else {
+
+
+async function associateAddress(userId, address, startDate, endDate) {
+    const objectId = new ObjectId(userId);
+
+    // Verify the user is a renter
+    const renter = await userCollection.findOne({ _id: objectId, role: 'renter' });
+    if (!renter) {
         throw new Error('Address association is only allowed for renters.');
     }
+
+    // Check if an owner has registered the address
+    const ownerExists = await userCollection.findOne({
+        role: 'owner',
+        'addressAssociations.address': address,
+        'addressAssociations.permanent': true,
+    });
+    if (!ownerExists) {
+        throw new Error('No owner is registered with the given address.');
+    }
+
+    // Proceed with address association
+    await userCollection.updateOne(
+        { _id: objectId },
+        { $push: { addressAssociations: { address, startDate: new Date(startDate), endDate: new Date(endDate) } } }
+    );
 }
 
-async function dissociateAddress(email, address) {
+
+async function dissociateAddress(_id, address) {
     await userCollection.updateOne(
-        { email: email },
+        { _id: user._id },
         { $pull: { addressAssociations: { address } } }
     );
 }

@@ -27,19 +27,6 @@ app.set('trust proxy', true);
 const apiRouter = express.Router();
 app.use(`/api`, apiRouter);
 
-// secureApiRouter verifies credentials for endpoints
-var secureApiRouter = express.Router();
-apiRouter.use(secureApiRouter);
-
-secureApiRouter.use(async (req, res, next) => {
-  authToken = req.cookies[authCookieName];
-  const user = await DB.getUserByToken(authToken);
-  if (user) {
-    next();
-  } else {
-    res.status(401).send({ msg: 'Unauthorized' });
-  }
-});
 
 apiRouter.get('/searchGroceryProducts', async (req, res) => {
   const query = req.query.query;
@@ -62,7 +49,7 @@ apiRouter.post('/register/owner', async (req, res) => {
   try {
     const user = await DB.createUser(email, password, 'owner', address);
     setAuthCookie(res, user.token); // Set the auth cookie
-    res.status(201).json({ message: "Owner registered successfully", userId: user._id });
+    res.status(201).json({ message: "Owner registered successfully", userId: user._id.toString() });
   } catch (error) {
     console.error('Registration error:', error);
     res.status(500).send('Error registering owner');
@@ -75,18 +62,34 @@ apiRouter.post('/register/renter', async (req, res) => {
   try {
       const user = await DB.createUser(email, password, 'renter');
       setAuthCookie(res, user.token); // Set the auth cookie
-      res.status(201).json({ message: "Renter registered successfully" });
+      res.status(201).json({ message: "Renter registered successfully", userId: user._id.toString() });
   } catch (error) {
       console.error('Registration error:', error);
       res.status(500).send('Error registering renter');
   }
 });
 
+// secureApiRouter verifies credentials for endpoints
+var secureApiRouter = express.Router();
+apiRouter.use(secureApiRouter);
+
+secureApiRouter.use(async (req, res, next) => {
+  authToken = req.cookies[authCookieName];
+  const user = await DB.getUserByToken(authToken);
+  if (user) {
+    next();
+  } else {
+    res.status(401).send({ msg: 'Unauthorized' });
+  }
+});
+
+
+
 // Renter associates an address to their account
-apiRouter.post('/renter/associate-address', async (req, res) => {
-  const { email, address, startDate, endDate } = req.body;
+secureApiRouter.post('/renter/associate-address', async (req, res) => {
+  const { userId, address, startDate, endDate } = req.body;
   try {
-      await DB.associateAddress(email, address, startDate, endDate);
+      await DB.associateAddress(userId, address, startDate, endDate);
       res.status(200).json({ message: "Address associated successfully" });
   } catch (error) {
       console.error('Association error:', error);
@@ -94,8 +97,7 @@ apiRouter.post('/renter/associate-address', async (req, res) => {
   }
 });
 
-
-apiRouter.post('/orders', async (req, res) => {
+secureApiRouter.post('/orders', async (req, res) => {
   const { userId, address, items } = req.body;
   
   // Verify that the renter is currently associated with the address
@@ -115,7 +117,7 @@ apiRouter.post('/orders', async (req, res) => {
 });
 
 
-apiRouter.get('/orders/:address', async (req, res) => {
+secureApiRouter.get('/orders/:address', async (req, res) => {
   const { address } = req.params;
   const userId = req.userId; // Assuming you have a way to identify the user (e.g., from a session or token)
 
@@ -147,6 +149,15 @@ setInterval(DB.dissociateExpiredAddresses, 24 * 60 * 60 * 1000);
 app.use((_req, res) => {
   res.sendFile('index.html', { root: 'public' });
 });
+
+// setAuthCookie in the HTTP response
+function setAuthCookie(res, authToken) {
+  res.cookie(authCookieName, authToken, {
+    secure: true,
+    httpOnly: true,
+    sameSite: 'strict',
+  });
+}
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
