@@ -117,8 +117,6 @@ secureApiRouter.post('/renter/associate-address', async (req, res) => {
 
 secureApiRouter.post('/orders', async (req, res) => {
   const { userId, address, items } = req.body;
-
-  // console.log(req.body);
   
   // Verify that the renter is currently associated with the address
   const canOrder = await DB.canPlaceOrder(userId, address);

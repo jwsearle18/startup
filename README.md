@@ -60,6 +60,7 @@ For this deliverable I associated the order with the address
 
  - **MongoDB Atlas database created** - DONE
  - **Stores data in MongoDB** - DONE
- - **Existing User** - 
- - **Use MongoDB to store credentials** - 
- - **Restricts Functionality** - 
+ - **User registration** - Creates new account in the database, assigns role
+ - **Existing User** - Stores Orders attached to addresses to be seen each time owner logs in.
+ - **Use MongoDB to store credentials** - Stores both User credentials (Renters & Owners) as well as the orders
+ - **Restricts Functionality** - You can't order or see orders for a particular address until you are logged in.  Renter's cannot see submitted orders.  Owners don't submit orders.  role checking - "owner" or "renter".
