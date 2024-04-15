@@ -1,62 +1,66 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const savedAddress = localStorage.getItem('userAddress');
-    
-    if (savedAddress) {
-        document.getElementById('displayAddress').textContent = `${savedAddress}`;
-    } else {
-        document.getElementById('displayAddress').textContent = 'No address selected.';
-    }
+  function displayUserDetails() {
+      const selectedAddress = localStorage.getItem('selectedAddress');
+      if (!selectedAddress) {
+          console.log("No address selected.");
+          return;
+      }
 
-  function displayOrders() {
-    // const selectedAddress = localStorage.getItem('selectedAddress');
-    
-    // if (selectedAddress) {
-    //     fetch(`/api/orders/${encodeURIComponent(selectedAddress)}`)
-    //         .then(response => response.json())
-    //         .then(orders => {
-    //             const orderItemsElement = document.getElementById("orderItems");
-    //             orderItemsElement.innerHTML = '';
-    //             orders.forEach(order => {
-    //                 const orderElement = document.createElement("p");
-    //                 orderElement.textContent = `Order ID: ${order._id}, Items: ${JSON.stringify(order.items)}`;
-    //                 orderItemsElement.appendChild(orderElement);
-    //             });
-    //         })
-    //         .catch(error => console.error('Error fetching orders:', error));
-    // } else {
-    //     console.log('No address selected. Please select an address to see orders.');
-    // }
-    const userAddress = localStorage.getItem('userAddress');
+      const registrations = JSON.parse(localStorage.getItem("registrations")) || {};
+      const userDetails = Object.values(registrations).find(reg => reg.address === selectedAddress);
 
-    if (userAddress) {
-      fetch(`/api/orders/${encodeURIComponent(userAddress)}`)
-          .then(response => response.json())
-          .then(orders => {
-              const orderItemsElement = document.getElementById("orderItems");
-              orderItemsElement.innerHTML = '';
-              orders.forEach(order => {
-                  const orderElement = document.createElement("div");
-                  orderElement.classList.add('order');
-                  const orderIdElement = document.createElement("p");
-                  orderIdElement.textContent = `Order ID: ${order._id}`;
-                  orderElement.appendChild(orderIdElement);
-                  
-                  const orderItemsList = document.createElement("ul");
-                  order.items.forEach(item => {
-                      const itemElement = document.createElement("li");
-                      itemElement.textContent = `Item: ${item.name}, Quantity: ${item.quantity}`;
-                      orderItemsList.appendChild(itemElement);
-                  });
-                  orderElement.appendChild(orderItemsList);
-                  orderItemsElement.appendChild(orderElement);
-              });
-          })
-          .catch(error => console.error('Error fetching orders:', error));
-    } else {
-      console.log('No address. Please select an address to see orders.');
-    }
+      if (userDetails) {
+          document.getElementById("userDetails").innerHTML = `Registered by: ${userDetails.firstname} ${userDetails.lastname}, Address: ${userDetails.address}`;
+      } else {
+          console.log("No registration data found for the selected address.");
+      }
   }
 
+  function displayOrders() {
+    const selectedAddress = localStorage.getItem('selectedAddress');
+    
+    if (selectedAddress) {
+      fetch(`/api/orders/${encodeURIComponent(selectedAddress)}`)
+        .then(response => response.json())
+        .then(orders => {
+          const orderItemsElement = document.getElementById("orderItems");
+          orderItemsElement.innerHTML = '';
+          orders.forEach(order => {
+            const orderElement = document.createElement("p");
+            orderElement.textContent = `${order.name} x${order.quantity}`;
+            orderItemsElement.appendChild(orderElement);
+          });
+        })
+        .catch(error => console.error('Error fetching orders:', error));
+    } else {
+      console.log('No address selected. Please select an address to see orders.');
+    }
+  }
+  
+
+//   function simulateWebSocketData() {
+//     const simulatedOrderItems = [
+//         "Doritos",
+//         "Lemonade",
+//         "Pretzels"
+//     ];
+
+//     setTimeout(() => {
+//         let fullOrder = simulatedOrderItems.reduce((order, item) => {
+//             const quantity = Math.floor(Math.random() * 6);
+//             if (quantity > 0) {
+//                 order.push(`${item}: ${quantity}`);
+//             }
+//             return order;
+//         }, []);
+
+        
+//         if (fullOrder.length > 0) {
+//             const orderItemsElement = document.getElementById("orderItems");
+//             orderItemsElement.innerHTML = `${fullOrder.join(" | ")}`;
+//         }
+//     }, 5000); 
+//   }
 
 async function signOut() {
   try {
@@ -80,7 +84,7 @@ async function signOut() {
 document.getElementById('signOutButton').addEventListener('click', signOut);
 
 
-
+  displayUserDetails();
   displayOrders(); 
 //   simulateWebSocketData(); 
 

@@ -27,6 +27,7 @@ function getUserByToken(token) {
 }
 
 async function createUser(email, password, role, address = null) {
+    // Hash the password before we insert it into the database
     const passwordHash = await bcrypt.hash(password, 10);
   
     const user = {
@@ -47,11 +48,13 @@ async function createUser(email, password, role, address = null) {
 async function associateAddress(userId, address, startDate, endDate) {
     const objectId = new ObjectId(userId);
 
+    // Verify the user is a renter
     const renter = await userCollection.findOne({ _id: objectId, role: 'renter' });
     if (!renter) {
         throw new Error('Address association is only allowed for renters.');
     }
 
+    // Check if an owner has registered the address
     const ownerExists = await userCollection.findOne({
         role: 'owner',
         'addressAssociations.address': address,
@@ -61,6 +64,7 @@ async function associateAddress(userId, address, startDate, endDate) {
         throw new Error('No owner is registered with the given address.');
     }
 
+    // Proceed with address association
     await userCollection.updateOne(
         { _id: objectId },
         { $push: { addressAssociations: { address, startDate: new Date(startDate), endDate: new Date(endDate) } } }
@@ -75,13 +79,7 @@ async function dissociateAddress(_id, address) {
     );
 }
 
-async function addOrder(orderDetails) {
-    const order = { 
-        userId: orderDetails.userId, 
-        address: orderDetails.address, 
-        items: orderDetails.items, 
-        createdAt: new Date() 
-    };
+async function addOrder(order) {
     await orderCollection.insertOne(order);
 }
 
@@ -91,16 +89,19 @@ async function getOrdersByAddress(address) {
 
 async function dissociateExpiredAddresses() {
     const today = new Date();
+    // Find renters with expired address associations
     const expiredAssociations = await userCollection.find({
         "role": "renter",
         "addressAssociations.endDate": { $lte: today }
     }).toArray();
 
     for (const user of expiredAssociations) {
+        // Filter out expired address associations
         const validAssociations = user.addressAssociations.filter(association => 
             !association.endDate || association.endDate > today
         );
 
+        // Update the user document to only include valid (non-expired) associations
         await userCollection.updateOne(
             { _id: user._id },
             { $set: { addressAssociations: validAssociations } }
@@ -109,30 +110,23 @@ async function dissociateExpiredAddresses() {
 }
 
 async function canPlaceOrder(userId, address) {
-    const isFound = userCollection.find({
-        "_id": userId,
-        "addressAssociations.address": address
-    });
-    
-    return isFound;
+    const user = await userCollection.findOne({ _id: userId, "role": "renter" });
+
+    if (!user) return false; // User not found or not a renter
+
+    // Check if there's an association with the address, assuming dissociateExpiredAddresses handles expiration
+    return user.addressAssociations.some(association => association.address === address);
 }
 
 
 async function isOwnerOfAddress(userId, address) {
-    const objectId = new ObjectId(userId);
+    const user = await userCollection.findOne({ _id: userId, "role": "owner" });
 
-    const user = await userCollection.findOne({
-        "_id": objectId,
-        "addressAssociations": {
-            $elemMatch: {
-                "address": address,
-                "permanent": true
-            }
-        },
-        "role": "owner"
-    });
+    if (!user) return false; // User not found or not an owner
 
-    return !!user;
+    return user.addressAssociations.some(association => 
+        association.address === address && association.permanent === true
+    );
 }
 
 

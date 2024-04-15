@@ -114,38 +114,32 @@ function updateOrderDisplay() {
         }
       });
 
-      document.getElementById("sendOrder").addEventListener("click", async function() {
-        const userId = localStorage.getItem("userId");
-        const currentAddress = localStorage.getItem("userAddress");
-        const selectedItems = JSON.parse(localStorage.getItem("selectedFoodItems")) || [];
-        
-        if (selectedItems.length > 0) {
-            try {
-                const response = await fetch('/api/orders', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ userId: userId, address: currentAddress, items: selectedItems })
-                });
-                if (response.ok) {
-                    localStorage.removeItem("selectedFoodItems");
-                    window.location.href = "deliveryStatus.html";
-                } else {
-                    const errorText = await response.text();
-                    alert("Failed to create the order: " + errorText);
-                }
-            } catch (error) {
-                console.error('Error placing order:', error);
-                alert('Error placing order: ' + error.message);
-            }
-        } else {
-            alert("No items selected for the order.");
-        }
-    });
-
   });
-
+  
+  document.getElementById("sendOrder").addEventListener("click", function() {
+    const currentAddress = sessionStorage.getItem("selectedAddress");
+    const selectedItems = JSON.parse(localStorage.getItem("selectedFoodItems")) || [];
+    
+    if (selectedItems.length > 0) {
+      fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ address: currentAddress, items: selectedItems }),
+      })
+      .then(response => {
+        if (response.ok) {
+          localStorage.removeItem("selectedFoodItems");
+          window.location.href = "deliveryStatus.html";
+        } else {
+          alert("Failed to create the order.");
+        }
+      });
+    } else {
+      alert("No items selected for the order.");
+    }
+  });
 
   async function signOut() {
     try {

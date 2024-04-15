@@ -137,7 +137,7 @@ secureApiRouter.post('/orders', async (req, res) => {
 
 secureApiRouter.get('/orders/:address', async (req, res) => {
   const { address } = req.params;
-  const userId = req.userId;
+  const userId = req.userId; // Assuming you have a way to identify the user (e.g., from a session or token)
 
   // Verify that the requester is the owner of the address
   const isOwner = await DB.isOwnerOfAddress(userId, address);
