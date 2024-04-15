@@ -22,7 +22,7 @@ async function handleSubmit(event) {
   const startDate = document.getElementById('startDate').value;
   const endDate = document.getElementById('endDate').value;
   
-  // Assuming you've stored the renter's email in localStorage/sessionStorage or have another way to retrieve it
+  // renter's email in localStorage
   const userId = localStorage.getItem('userId');
 
   // Ensure a user ID is present

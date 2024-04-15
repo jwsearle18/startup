@@ -1,7 +1,6 @@
 let autocomplete;
 
 function initAutocomplete() {
-    // Ensure this function can safely run multiple times by removing any existing autocomplete instance if needed
     if (window.autocomplete) {
         google.maps.event.clearInstanceListeners(window.autocomplete);
     }
@@ -10,6 +9,18 @@ function initAutocomplete() {
     if (addressInput) {
         window.autocomplete = new google.maps.places.Autocomplete(addressInput, { types: ['geocode'] });
         window.autocomplete.setFields(['address_components', 'geometry', 'name']);
+
+        // Listen for the "place_changed" event on the autocomplete object
+        window.autocomplete.addListener('place_changed', () => {
+            const place = window.autocomplete.getPlace();
+            if (!place.geometry) {
+                alert('No details available for input: ' + place.name);
+                return;
+            }
+            // Format address like address.js
+            const formattedAddress = place.address_components.map(component => component.long_name).join(', ');
+            addressInput.value = formattedAddress; // Update the input box with the formatted address
+        });
     }
 }
 
@@ -60,8 +71,8 @@ async function registerUser(role, email, password, address = null) {
     const endpoint = role === 'owner' ? '/api/register/owner' : '/api/register/renter';
     const payload = { email, password };
     if (role === 'owner') {
-        payload.address = address
-        localStorage.setItem('userAddress', address);
+        payload.address = document.getElementById('vacationRentalAddress').value;
+        localStorage.setItem('userAddress', payload.address);
     }
   
     try {
