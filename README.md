@@ -56,7 +56,7 @@ For this deliverable I added backend enpoints that receive orders associated wit
 
  ## DB/Login Deliverable
 
-For this deliverable I associated the order with the address
+For this deliverable I associated the order with the address.  I created roles that restricted access throughout application. 
 
  - **MongoDB Atlas database created** - DONE
  - **Stores data in MongoDB** - DONE
