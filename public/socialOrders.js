@@ -6,14 +6,30 @@ document.addEventListener("DOMContentLoaded", function() {
 
   socket.onmessage = function(event) {
     const message = JSON.parse(event.data);
-    displayOrderNotification(message);
+    if (message.type === 'newOrder') {
+      displayOrderNotification(message.orders);
+    } 
+    
 };
 
-function displayOrderNotification(message) {
+function displayOrderNotification(orders) {
+  const notificationContainer = document.getElementById('notificationContainer')
+  notificationContainer.innerHTML = '';
+  
+  if (Array.isArray(orders)) {
+    orders.forEach(order => {
+      const notificationElement = document.createElement('p');
+      notificationElement.textContent = order;
+      notificationElement.className = 'notification';
+      notificationContainer.appendChild(notificationElement);
+    });
+  } else { // If `orders` is a single string of order
     const notificationElement = document.createElement('p');
-    notificationElement.textContent = message;
-    notificationElement.className = 'order-notification';
-    document.body.appendChild(notificationElement);
+    notificationElement.textContent = orders;
+    notificationElement.className = 'notification';
+    notificationContainer.appendChild(notificationElement);
+  }
+
 }
 
 

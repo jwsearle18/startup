@@ -126,7 +126,7 @@ a:hover img {
     padding: 10px 10px 0 0;
 }
 
-.order-notification {
+.notificationContainer {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -139,13 +139,24 @@ a:hover img {
     animation: fadeNotification 5s ease-in-out forwards;
 }
 
+.notification {
+    background-color: #f0f0f0; /* Light grey background */
+    color: #333; /* Dark text */
+    margin-bottom: 10px; /* Space between notifications */
+    padding: 5px 10px; /* Padding inside notification */
+    border-radius: 4px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+    /* Any other styles you want for individual notifications */
+}
+
+
 @keyframes fadeNotification {
     0%, 100% { opacity: 0; bottom: 10px; }
     10%, 90% { opacity: 1; bottom: 20px; }
 }
 
 @media (max-width: 600px) {
-    .order-notification {
+    .notificationContainer {
         width: 90%; /* Full width for smaller screens */
         left: 5%; /* Center the notification horizontally */
         right: auto; /* Adjust right positioning */

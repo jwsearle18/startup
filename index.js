@@ -135,8 +135,17 @@ secureApiRouter.post('/orders', async (req, res) => {
   try {
       await DB.addOrder({ userId, address, items });
       
-      const itemNames = items.map(item => item.name).join(", ");
-      broadcastOrder(`"${itemNames} were just ordered!"`);
+
+      let message;
+      if (items.length === 1) {
+          message = `${items[0].name} was just ordered by another renter!`;
+      } else {
+          const itemNames = items.map(item => item.name);
+          const lastItem = itemNames.pop();
+          message = `${itemNames.join(", ")} and ${lastItem} were just ordered by another renter!`;
+      }
+      broadcastOrder(message);
+      console.log(message);
 
       res.status(201).send('Order placed successfully.');
       
@@ -149,15 +158,13 @@ secureApiRouter.post('/orders', async (req, res) => {
 
 secureApiRouter.get('/orders/:address', async (req, res) => {
   const { address } = req.params;
-  const userId = req.userId; // Assuming you have a way to identify the user (e.g., from a session or token)
+  const userId = req.userId;
 
-  // Verify that the requester is the owner of the address
   const isOwner = await DB.isOwnerOfAddress(userId, address);
   if (!isOwner) {
     return res.status(403).json({ message: "You're not authorized to place an order for this address." });
   }
 
-  // If authorized, proceed to retrieve and send orders for the address
   try {
       const orders = await DB.getOrdersByAddress(address);
       res.json(orders);
@@ -175,12 +182,10 @@ apiRouter.delete('/auth/logout', (req, res) => {
 
 setInterval(DB.dissociateExpiredAddresses, 24 * 60 * 60 * 1000);
 
-// Return the application's default page if the path is unknown
 app.use((_req, res) => {
   res.sendFile('index.html', { root: 'public' });
 });
 
-// setAuthCookie in the HTTP response
 function setAuthCookie(res, authToken) {
   res.cookie(authCookieName, authToken, {
     secure: true,

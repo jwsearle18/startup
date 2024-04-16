@@ -1,7 +1,8 @@
-const { WebSocketServer } = require('ws');
+const { WebSocketServer, WebSocket } = require('ws');
 const uuid = require('uuid');
 
 let wss;
+let connections = [];
 
 function peerProxy(httpServer) {
   wss = new WebSocketServer({ noServer: true });
@@ -12,7 +13,7 @@ function peerProxy(httpServer) {
     });
   });
 
-  let connections = [];
+  
 
   wss.on('connection', (ws, request) => {
     const connection = { id: uuid.v4(), alive: true, ws };
@@ -20,7 +21,7 @@ function peerProxy(httpServer) {
 
     ws.on('message', data => {
       const message = JSON.parse(data);
-      // Implement any message handling logic here if needed
+        broadcastOrder(message.orders);
     });
 
     ws.on('close', () => {
@@ -42,6 +43,7 @@ function peerProxy(httpServer) {
       }
     });
   }, 10000);
+
 }
 
 function broadcastOrder(orders) {
