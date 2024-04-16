@@ -23,7 +23,7 @@ function displayOrderNotification(orders) {
       notificationElement.className = 'notification';
       notificationContainer.appendChild(notificationElement);
     });
-  } else { // If `orders` is a single string of order
+  } else {
     const notificationElement = document.createElement('p');
     notificationElement.textContent = orders;
     notificationElement.className = 'notification';

@@ -110,7 +110,6 @@ secureApiRouter.use(async (req, res, next) => {
 
 apiRouter.use(secureApiRouter);
 
-// Renter associates an address to their account
 secureApiRouter.post('/renter/associate-address', async (req, res) => {
   const { userId, address, startDate, endDate } = req.body;
   try {
@@ -125,13 +124,11 @@ secureApiRouter.post('/renter/associate-address', async (req, res) => {
 secureApiRouter.post('/orders', async (req, res) => {
   const { userId, address, items } = req.body;
   
-  // Verify that the renter is currently associated with the address
   const canOrder = await DB.canPlaceOrder(userId, address);
   if (!canOrder) {
       return res.status(403).send("You're not authorized to place an order for this address.");
   }
 
-  // If authorized, proceed to add the order
   try {
       await DB.addOrder({ userId, address, items });
       
