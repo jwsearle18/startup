@@ -38,4 +38,3 @@ document.addEventListener("DOMContentLoaded", function() {
 
   document.getElementById('signOutButton').addEventListener('click', signOut);
   });
-  // Future Websocket data

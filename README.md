@@ -64,3 +64,12 @@ For this deliverable I associated the order with the address.  I created roles t
  - **Existing User** - Stores Orders attached to addresses to be seen each time owner logs in.
  - **Use MongoDB to store credentials** - Stores both User credentials (Renters & Owners) as well as the orders
  - **Restricts Functionality** - You can't order or see orders for a particular address until you are logged in.  Renter's cannot see submitted orders.  Owners don't submit orders.  role checking - "owner" or "renter".
+
+ ## WebSocket Deliverable
+
+For this deliverable I used WebSocket to update the delivery status of the orders
+
+ - **Backend listens for WebSocket connection** - 
+ - **Frontend makes WebSocket connection** - 
+ - **Data sent over WebSocket connection** - 
+ - **WebSocket data displayed** - Delivery status can be updated in real time!
