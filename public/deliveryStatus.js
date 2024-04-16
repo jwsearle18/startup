@@ -1,24 +1,51 @@
 document.addEventListener("DOMContentLoaded", function() {
+//     const statusMessages = [
+//       "Order Sent!",
+//       "Order Being Picked up!",
+//       "Order Being Stocked!",
+//       "Your Vacation Rental is Fully Airestocked!"
+//     ];
+    
+//     let currentIndex = 0; 
+    
+//     function updateStatus() {
+//       document.getElementById("status").innerText = statusMessages[currentIndex];
+      
+//       currentIndex++;
+      
+//       if (currentIndex < statusMessages.length) {
+//         setTimeout(updateStatus, 3000); 
+//       }
+//     }
+    
+//     setTimeout(updateStatus, 1000);
+
     const statusMessages = [
       "Order Sent!",
       "Order Being Picked up!",
       "Order Being Stocked!",
       "Your Vacation Rental is Fully Airestocked!"
     ];
-    
+
     let currentIndex = 0; 
-    
+
+    // WebSocket setup
+    const ws = new WebSocket('wss://your-server-url/ws');
+    ws.onmessage = function(event) {
+        const message = JSON.parse(event.data);
+        if (message.type === 'updateStatus') {
+            currentIndex = message.statusIndex; // Update index based on the message
+            updateStatus(); // Update the status immediately
+        }
+    };
+
     function updateStatus() {
       document.getElementById("status").innerText = statusMessages[currentIndex];
       
-      currentIndex++;
-      
-      if (currentIndex < statusMessages.length) {
-        setTimeout(updateStatus, 3000); 
+      if (currentIndex < statusMessages.length - 1) {
+        currentIndex++; // Prepare the next status update
       }
     }
-    
-    setTimeout(updateStatus, 1000);
 
     async function signOut() {
       try {

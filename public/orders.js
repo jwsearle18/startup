@@ -1,4 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+
+  const ws = new WebSocket('wss://your-server-url/ws');
+
+  function sendStatusUpdate(statusIndex) {
+    ws.send(JSON.stringify({ type: 'updateStatus', statusIndex: statusIndex }));
+  }
+  
+    // Attach event listeners to buttons
+    document.querySelector('buttonP').addEventListener('click', () => sendStatusUpdate(1));
+    document.querySelector('buttonB').addEventListener('click', () => sendStatusUpdate(2));
+    document.querySelector('buttonA').addEventListener('click', () => sendStatusUpdate(3));
+  
+    
+
+
+
+
   const userAddress = localStorage.getItem('userAddress');
 
  if (userAddress) {
