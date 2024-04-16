@@ -1,38 +1,62 @@
-// const { WebSocketServer } = require('ws');
-// const wss = new WebSocketServer({ noServer: true });
-// const userSockets = new Map(); // Maps user IDs to WebSocket connections
+const { WebSocketServer } = require('ws');
+const uuid = require('uuid');
 
-// function setupWebSocketServer(httpServer) {
-//     httpServer.on('upgrade', function upgrade(request, socket, head) {
-//         // You could perform authentication here if necessary
+let wss;
 
-//         wss.handleUpgrade(request, socket, head, function done(ws) {
-//             ws.on('message', function incoming(message) {
-//                 const { userId, action } = JSON.parse(message);
-//                 if (action === 'register') {
-//                     userSockets.set(userId, ws);
-//                 }
-//                 // Additional message handling...
-//             });
+function peerProxy(httpServer) {
+  wss = new WebSocketServer({ noServer: true });
 
-//             ws.on('close', () => {
-//                 // Remove the closed connection from the map
-//                 userSockets.forEach((value, key) => {
-//                     if (value === ws) {
-//                         userSockets.delete(key);
-//                     }
-//                 });
-//             });
-//         });
-//     });
-// }
+  httpServer.on('upgrade', (request, socket, head) => {
+    wss.handleUpgrade(request, socket, head, socket => {
+      wss.emit('connection', socket, request);
+    });
+  });
 
-// // Function to send a message to a specific user
-// function sendMessageToUser(userId, data) {
-//     const ws = userSockets.get(userId);
-//     if (ws && ws.readyState === ws.OPEN) {
-//         ws.send(JSON.stringify(data));
-//     }
-// }
+  let connections = [];
 
-// module.exports = { setupWebSocketServer, sendMessageToUser };
+  wss.on('connection', (ws, request) => {
+    const connection = { id: uuid.v4(), alive: true, ws };
+    connections.push(connection);
+
+    ws.on('message', data => {
+      const message = JSON.parse(data);
+      // Implement any message handling logic here if needed
+    });
+
+    ws.on('close', () => {
+      connections = connections.filter(c => c.id !== connection.id);
+    });
+
+    ws.on('pong', () => {
+      connection.alive = true;
+    });
+  });
+
+  setInterval(() => {
+    connections.forEach(c => {
+      if (!c.alive) {
+        c.ws.terminate();
+      } else {
+        c.alive = false;
+        c.ws.ping(() => {});
+      }
+    });
+  }, 10000);
+}
+
+function broadcastOrder(orders) {
+    if (!wss || !wss.clients) {
+        console.error('WebSocket server is not initialized or has no clients.');
+        return;
+      }
+  wss.clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify({
+        type: 'newOrder',
+        orders
+      }));
+    }
+  });
+}
+
+module.exports = { peerProxy, broadcastOrder };

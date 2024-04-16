@@ -5,7 +5,7 @@ const app = express();
 const DB = require('./database.js');
 const cors = require('cors');
 
-// const { peerProxy } = require('./peerProxy');
+const { peerProxy, broadcastOrder } = require('./peerProxy');
 
 
 // const fetch = require('node-fetch');
@@ -134,7 +134,12 @@ secureApiRouter.post('/orders', async (req, res) => {
   // If authorized, proceed to add the order
   try {
       await DB.addOrder({ userId, address, items });
+      
+      const itemNames = items.map(item => item.name).join(", ");
+      broadcastOrder(`"${itemNames} were just ordered!"`);
+
       res.status(201).send('Order placed successfully.');
+      
   } catch (error) {
       console.error('Order placement error:', error);
       res.status(500).send('Error placing order');
@@ -189,4 +194,4 @@ const httpService = app.listen(port, () => {
   DB.dissociateExpiredAddresses();
 });
 
-// peerProxy(httpService);
+peerProxy(httpService);

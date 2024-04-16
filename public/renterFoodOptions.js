@@ -130,7 +130,7 @@ function updateOrderDisplay() {
                 });
                 if (response.ok) {
                     localStorage.removeItem("selectedFoodItems");
-                    window.location.href = "deliveryStatus.html";
+                    window.location.href = "socialOrders.html";
                 } else {
                     const errorText = await response.text();
                     alert("Failed to create the order: " + errorText);
