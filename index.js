@@ -5,6 +5,8 @@ const app = express();
 const DB = require('./database.js');
 const cors = require('cors');
 
+// const { peerProxy } = require('./peerProxy');
+
 
 // const fetch = require('node-fetch');
 
@@ -182,7 +184,9 @@ function setAuthCookie(res, authToken) {
   });
 }
 
-app.listen(port, () => {
+const httpService = app.listen(port, () => {
   console.log(`Listening on port ${port}`);
   DB.dissociateExpiredAddresses();
 });
+
+// peerProxy(httpService);

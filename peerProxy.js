@@ -1,37 +1,38 @@
-const WebSocket = require('ws');
-const wss = new WebSocket.Server({ noServer: true });
+// const { WebSocketServer } = require('ws');
+// const wss = new WebSocketServer({ noServer: true });
+// const userSockets = new Map(); // Maps user IDs to WebSocket connections
 
-function setupWebSocketServer(server) {
-  server.on('upgrade', (request, socket, head) => {
-    wss.handleUpgrade(request, socket, head, ws => {
-        wss.emit('connection', ws, request, client);
-    });
-    
-  });
+// function setupWebSocketServer(httpServer) {
+//     httpServer.on('upgrade', function upgrade(request, socket, head) {
+//         // You could perform authentication here if necessary
 
-  wss.on('connection', (ws, request, client) => {
-    ws.on('message', (message) => {
-      console.log(`Received message from ${client.id}: ${message}`);
-      // Process messages here and broadcast updates as needed
-    });
+//         wss.handleUpgrade(request, socket, head, function done(ws) {
+//             ws.on('message', function incoming(message) {
+//                 const { userId, action } = JSON.parse(message);
+//                 if (action === 'register') {
+//                     userSockets.set(userId, ws);
+//                 }
+//                 // Additional message handling...
+//             });
 
-    ws.on('close', () => {
-      console.log(`Connection closed: ${client.id}`);
-    });
-  });
+//             ws.on('close', () => {
+//                 // Remove the closed connection from the map
+//                 userSockets.forEach((value, key) => {
+//                     if (value === ws) {
+//                         userSockets.delete(key);
+//                     }
+//                 });
+//             });
+//         });
+//     });
+// }
 
-  // Broadcast a message to all connected clients
-  function broadcastUpdate(type, data) {
-    wss.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({ type, ...data }));
-      }
-    });
-  }
+// // Function to send a message to a specific user
+// function sendMessageToUser(userId, data) {
+//     const ws = userSockets.get(userId);
+//     if (ws && ws.readyState === ws.OPEN) {
+//         ws.send(JSON.stringify(data));
+//     }
+// }
 
-  // Expose the broadcast function to other modules
-  return { broadcastUpdate };
-}
-
-
-module.exports = { setupWebSocketServer };
+// module.exports = { setupWebSocketServer, sendMessageToUser };
