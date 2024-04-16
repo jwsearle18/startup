@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const express = require('express');
 const app = express();
 const DB = require('./database.js');
+const cors = require('cors');
+
 
 // const fetch = require('node-fetch');
 
@@ -26,6 +28,8 @@ app.set('trust proxy', true);
 // Router for service endpoints
 const apiRouter = express.Router();
 app.use(`/api`, apiRouter);
+
+apiRouter.use(cors());
 
 
 apiRouter.get('/searchGroceryProducts', async (req, res) => {
@@ -89,19 +93,20 @@ apiRouter.post('/auth/login', async (req, res) => {
 
 // secureApiRouter verifies credentials for endpoints
 var secureApiRouter = express.Router();
-apiRouter.use(secureApiRouter);
+
 
 secureApiRouter.use(async (req, res, next) => {
   authToken = req.cookies[authCookieName];
   const user = await DB.getUserByToken(authToken);
   if (user) {
+    req.userId = user._id.toString();
     next();
   } else {
     res.status(401).send({ msg: 'Unauthorized' });
   }
 });
 
-
+apiRouter.use(secureApiRouter);
 
 // Renter associates an address to their account
 secureApiRouter.post('/renter/associate-address', async (req, res) => {
@@ -142,7 +147,7 @@ secureApiRouter.get('/orders/:address', async (req, res) => {
   // Verify that the requester is the owner of the address
   const isOwner = await DB.isOwnerOfAddress(userId, address);
   if (!isOwner) {
-      return res.status(403).send("You're not authorized to view orders for this address.");
+    return res.status(403).json({ message: "You're not authorized to place an order for this address." });
   }
 
   // If authorized, proceed to retrieve and send orders for the address

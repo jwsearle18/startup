@@ -79,7 +79,13 @@ async function dissociateAddress(_id, address) {
     );
 }
 
-async function addOrder(order) {
+async function addOrder(orderDetails) {
+    const order = { 
+        userId: orderDetails.userId, 
+        address: orderDetails.address, 
+        items: orderDetails.items, 
+        createdAt: new Date() 
+    };
     await orderCollection.insertOne(order);
 }
 
@@ -110,23 +116,30 @@ async function dissociateExpiredAddresses() {
 }
 
 async function canPlaceOrder(userId, address) {
-    const user = await userCollection.findOne({ _id: userId, "role": "renter" });
-
-    if (!user) return false; // User not found or not a renter
-
-    // Check if there's an association with the address, assuming dissociateExpiredAddresses handles expiration
-    return user.addressAssociations.some(association => association.address === address);
+    const isFound = userCollection.find({
+        "_id": userId,
+        "addressAssociations.address": address
+    });
+    
+    return isFound;
 }
 
 
 async function isOwnerOfAddress(userId, address) {
-    const user = await userCollection.findOne({ _id: userId, "role": "owner" });
+    const objectId = new ObjectId(userId);
 
-    if (!user) return false; // User not found or not an owner
+    const user = await userCollection.findOne({
+        "_id": objectId,
+        "addressAssociations": {
+            $elemMatch: {
+                "address": address,
+                "permanent": true
+            }
+        },
+        "role": "owner"
+    });
 
-    return user.addressAssociations.some(association => 
-        association.address === address && association.permanent === true
-    );
+    return !!user;
 }
 
 
