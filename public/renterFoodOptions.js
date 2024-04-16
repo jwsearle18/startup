@@ -151,10 +151,9 @@ function updateOrderDisplay() {
     try {
       const response = await fetch('/api/auth/logout', { method: 'DELETE' });
       if (response.ok) {
-        localStorage.removeItem('userId'); // Clear user ID
-        localStorage.removeItem('userAddress'); // Clear renter address if stored
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userAddress');
   
-        // Redirect to the login page or home page
         window.location.href = 'index.html';
       } else {
         alert('Failed to sign out. Please try again.');
@@ -165,6 +164,5 @@ function updateOrderDisplay() {
     }
   }
   
-  // Add event listener for sign-out button
   document.getElementById('signOutButton').addEventListener('click', signOut);
   
