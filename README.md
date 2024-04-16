@@ -67,9 +67,9 @@ For this deliverable I associated the order with the address.  I created roles t
 
  ## WebSocket Deliverable
 
-For this deliverable I used WebSocket to update the delivery status of the orders
+For this deliverable I used WebSocket to broadcast orders to renters on the socialOrders page.
 
- - **Backend listens for WebSocket connection** - 
- - **Frontend makes WebSocket connection** - 
- - **Data sent over WebSocket connection** - 
- - **WebSocket data displayed** - Delivery status can be updated in real time!
+ - **Backend listens for WebSocket connection** - DONE
+ - **Frontend makes WebSocket connection** - DONE
+ - **Data sent over WebSocket connection** - DONE
+ - **WebSocket data displayed** - After a renter places an order, they can see orders being placed by other renters!
